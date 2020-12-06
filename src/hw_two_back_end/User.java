@@ -3,14 +3,16 @@ package hw_two_back_end;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.sql.Time;
+import java.lang.Exception;
 
 
-
-public class User implements SysEntry{
-
+public class User extends Subject implements SysEntry, Observer{
+	
+	private long time_frame;
+	private Time time_updated = new Time(time_frame);
 	private String UniqueID;
 	private int message_limit = 500;
-	private List <User> Followers = new ArrayList<User>();
 	private List <User> Following = new ArrayList<User>();
 	private List <String> user_messages = new ArrayList<String>();
 	private List <String> News_Feed = new ArrayList<String>();
@@ -38,52 +40,33 @@ public class User implements SysEntry{
 	}
 
 	
-
-	
-	
-	
-	
-	
-	//All UserIDs of those that follow User
-	public List <User> getFollowers() {
-		return Followers;
-	}
-	
-	
-	public void setFollowers(List <User> followers) {
-		this.Followers = followers;
-	}
-	
-	
 	
 	
 	//All the UserIds the User Follows
 	public List <User> getFollowing() {
-		return Following;
+		return this.Following;
 	}
 	
 	
 	
-	public void setFollowing(List <User> following) {
-		this.Following = following;
+	public void setFollowing(User user) {
+		this.Following.add(user);
 	}
 	
 	
 	
 	
 	
-	//All Twitter Messages from User followers NewsFeed
+	//User NewsFeed
 	public List <String> getNews_Feed() {
 		return News_Feed;
 	}
 	
 	
-	
-	public void setNews_Feed(List <String> news_Feed) {
-		News_Feed = news_Feed;
+	//User TweetMessages
+	public List <String> getUser_Messages(){
+		return user_messages;
 	}
-	
-	
 	
 	
 	
@@ -95,28 +78,46 @@ public class User implements SysEntry{
 		
 	}
 	
+
+
+	@Override
+	public void accept(TwitterVisitor visitor) {
+		visitor.VisitUser(this);		
+	}
+
+
+	@Override
+	public void update(Subject subject, String message) {
+		if(subject instanceof User) {
+			this.News_Feed.add(((User) subject).id() + ": "+ "\n" + message);
+			this.time_frame = System.currentTimeMillis();
+			this.time_updated = new Time(time_frame);
+			
+			
+		}
+		else
+			throw new RuntimeException("Not User trying to post");
+		
+	}
+	
+	
+	
+	
+	//Twitter Posts of User
 	
 	public void Post (String message) {
 		if(message.length() <= message_limit) {
 			user_messages.add(message);
+			News_Feed.add(this.id() + ":" + "\n" + message);
+			notifyObservers(message);
+			this.time_frame = System.currentTimeMillis();
+			this.time_updated = new Time(time_frame);
 			
 		}
 		else System.out.println("Tweet message is too long");
 		
 	}
 
-
-	
-
-
-
-
-
-	@Override
-	public void accept(TwitterVisitor visitor) {
-		// TODO 
-		
-	}
 	  
 	
 	

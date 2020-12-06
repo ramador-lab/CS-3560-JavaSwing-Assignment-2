@@ -24,4 +24,12 @@ public abstract class Subject {
 		observers.remove(observer);
 	}
 	
+	
+	
+	public void notifyObservers(String message_post) {
+		for(Observer observer : observers) {
+			observer.update(this, message_post);
+		}
+	}
+	
 }
