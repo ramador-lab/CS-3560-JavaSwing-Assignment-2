@@ -63,6 +63,30 @@ public class UserGroup implements SysEntry {
 		}
 		
 	}
+	
+	
+	public Boolean findID(String id_input) {
+		for(SysEntry element : Member_Groups) {
+			if(element instanceof User) {
+				continue;
+			}
+			
+			else if(element instanceof UserGroup) {
+				if(element.id().equals(id_input)) {
+					return true;
+				}
+			
+				else {
+					if(((UserGroup) element).findID(id_input)){
+						
+						return true;
+					}
+				}
+			}
+		}
+		
+		return false;
+	}
 
 	
 

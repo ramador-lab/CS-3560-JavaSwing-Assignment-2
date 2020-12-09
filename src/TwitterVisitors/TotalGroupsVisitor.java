@@ -4,10 +4,12 @@ import hw_two_back_end.*;
 
 public class TotalGroupsVisitor implements TwitterVisitor {
 
+	private int total = 0;
+	
 	@Override
 	public void VisitUser(User user) {
 		// Does Not Apply to individual User
-		
+		setTotal(getTotal() + 1);
 	}
 
 	@Override
@@ -20,6 +22,14 @@ public class TotalGroupsVisitor implements TwitterVisitor {
 	public void VisitAllUsers(AllUsers all) {
 		// Does Not Apply
 		
+	}
+
+	public int getTotal() {
+		return total;
+	}
+
+	public void setTotal(int total) {
+		this.total = total;
 	}
 
 }
