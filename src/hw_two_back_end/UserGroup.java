@@ -1,5 +1,6 @@
 package hw_two_back_end;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,15 +10,27 @@ public class UserGroup implements SysEntry {
 
 	private List <SysEntry> Member_Groups = new ArrayList <SysEntry> (); 
 
-	
+	private long time_frame;
+	private Time time_created = new Time(time_frame);
 	
 	
 	
 	//Set and Get UserID for User
 	public UserGroup(String id) {
 		this.UniqueID = id;
+		this.time_frame = System.currentTimeMillis();
+		this.time_created = new Time (time_frame);
 	}
 	
+	
+	
+	// Assignment 3
+	public Time getCreation_Time() {
+		return time_created;
+	}
+	
+	
+
 	
     public User look_for_user(String id){
         for (SysEntry member : Member_Groups) {

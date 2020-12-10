@@ -1,5 +1,6 @@
 package hw_two_font_end;
 
+//Assignment 3 Buttons - Line 171 and methods along on actionlistener
 
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -40,6 +41,8 @@ public class AdminControlPanel extends JFrame implements ActionListener,TreeSele
 			private JButton show_message_total;
 			private JButton show_group_total;
 			private JButton show_positive_percentage;
+			private JButton validateUser;
+			private JButton validateGroup;
 		
 			private JPanel treePanel;
 			
@@ -146,7 +149,7 @@ public class AdminControlPanel extends JFrame implements ActionListener,TreeSele
 			show_message_total.setText("SHOW MESSAGE TOTAL");
 			show_message_total.setHorizontalTextPosition(JButton.CENTER);
 			show_message_total.setFocusable(false);
-			show_message_total.setBounds(25, 150, 250, 50);
+			show_message_total.setBounds(25, 100, 250, 50);
 			
 			//Group Total			
 			show_group_total = new JButton();
@@ -163,7 +166,25 @@ public class AdminControlPanel extends JFrame implements ActionListener,TreeSele
 			show_positive_percentage.setText("SHOW POSITIVE PERCENTAGE");
 			show_positive_percentage.setHorizontalTextPosition(JButton.CENTER);
 			show_positive_percentage.setFocusable(false);
-			show_positive_percentage.setBounds(325, 150, 250, 50);
+			show_positive_percentage.setBounds(325, 100, 250, 50);
+			
+			
+		//Assignment Buttons	
+	
+			validateUser = new JButton();
+			validateUser.addActionListener(this);
+			validateUser.setText("VALIDATE USER IDs");
+			validateUser.setHorizontalTextPosition(JButton.CENTER);
+			validateUser.setFocusable(false);
+			validateUser.setBounds(25, 160, 250, 50);
+			
+
+			validateGroup = new JButton();
+			validateGroup.addActionListener(this);
+			validateGroup.setText("VALIDATE GROUP IDs");
+			validateGroup.setHorizontalTextPosition(JButton.CENTER);
+			validateGroup.setFocusable(false);
+			validateGroup.setBounds(325, 160, 250, 50);
 			
 			
 		
@@ -226,8 +247,8 @@ public class AdminControlPanel extends JFrame implements ActionListener,TreeSele
 			bottom_panel.add(show_message_total);
 			bottom_panel.add(show_group_total);
 			bottom_panel.add(show_positive_percentage);
-			
-			
+			bottom_panel.add(validateGroup);
+			bottom_panel.add(validateUser);
 			
 			
 			
@@ -412,7 +433,33 @@ public class AdminControlPanel extends JFrame implements ActionListener,TreeSele
 
 		}
 			
-			
+		
+		if(e.getSource() == validateGroup) {
+	      	ValidatingVisitor visitor = new ValidatingVisitor();
+            root_group.accept(visitor);
+            
+            if (visitor.validity_group()){
+            	JOptionPane.showMessageDialog(null,"All IDs are valid","Validity",JOptionPane.INFORMATION_MESSAGE);
+            }
+            else {
+            JOptionPane.showMessageDialog(null,"IDs not Valid ", "Validity", JOptionPane.ERROR_MESSAGE);
+            }
+
+
+		}
+		
+		if(e.getSource() == validateUser) {
+	      	ValidatingVisitor visitor = new ValidatingVisitor();
+            root_group.accept(visitor);
+            
+            if (visitor.validity_user()){
+            	JOptionPane.showMessageDialog(null,"All IDs are valid","Validity",JOptionPane.INFORMATION_MESSAGE);
+            }
+            else {
+            JOptionPane.showMessageDialog(null,"IDs not Valid ", "Validity", JOptionPane.ERROR_MESSAGE);
+            }
+
+		}
 	
 
 	}

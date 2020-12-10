@@ -10,10 +10,13 @@ import java.sql.Time;
 import java.lang.Exception;
 
 
+//Assignment 3 features- line 62
+
 public class User extends Subject implements SysEntry, Observer{
 	
 	private long time_frame;
 	private Time time_updated = new Time(time_frame);
+	private Time time_created = new Time(time_frame);
 	private String UniqueID;
 	private int message_limit = 500;
 	private List <User> Following = new ArrayList<User>();
@@ -27,6 +30,8 @@ public class User extends Subject implements SysEntry, Observer{
 	//UserID for User
 	public User(String Uniqueid) {
 		this.UniqueID = Uniqueid;
+		this.time_frame = System.currentTimeMillis();
+		this.time_created = new Time (time_frame);
 	}
 	
 	
@@ -57,8 +62,32 @@ public class User extends Subject implements SysEntry, Observer{
 	}
 	
 	
+	// Assignment 3
+	public Time getCreation_Time() {
+		return time_created;
+	}
 	
 	
+
+	@Override
+	public void update(Subject subject, String message) {
+		if(subject instanceof User) {
+			this.News_Feed.add(((User) subject).id() + ": "+ "\n" + message);
+			this.time_frame = System.currentTimeMillis();
+			this.time_updated = new Time(time_frame);
+			this.News_Feed.set(1, "last update: " + time_updated);
+			
+			
+		}
+		else
+			throw new RuntimeException("Not User trying to post");
+		
+	}
+	
+	
+	public Time getUpdated_time() {
+		return time_updated;
+	}
 	
 	//User NewsFeed
 	public List <String> getNews_Feed() {
@@ -87,23 +116,6 @@ public class User extends Subject implements SysEntry, Observer{
 	public void accept(TwitterVisitor visitor) {
 		visitor.VisitUser(this);		
 	}
-
-
-	@Override
-	public void update(Subject subject, String message) {
-		if(subject instanceof User) {
-			this.News_Feed.add(((User) subject).id() + ": "+ "\n" + message);
-			this.time_frame = System.currentTimeMillis();
-			this.time_updated = new Time(time_frame);
-			this.News_Feed.set(1, "last update: " + time_updated);
-			
-			
-		}
-		else
-			throw new RuntimeException("Not User trying to post");
-		
-	}
-	
 	
 	
 	

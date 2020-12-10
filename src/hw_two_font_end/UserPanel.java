@@ -32,6 +32,8 @@ import javax.swing.tree.TreeSelectionModel;
 import hw_two_back_end.*;
 import TwitterVisitors.*;
 
+
+//Assignment 3 Creation time in Title with User ID and update time in News_feed
 public class UserPanel extends JFrame implements ActionListener,TreeSelectionListener{
 	
 		private JButton follow_user;
@@ -41,7 +43,7 @@ public class UserPanel extends JFrame implements ActionListener,TreeSelectionLis
 		private JTextArea user_id;
 		
 		JLabel user_id_label;
-		
+		JLabel time_user_creted;
 		
 		private JList list;
 		private JList news_feed;
@@ -152,7 +154,7 @@ public class UserPanel extends JFrame implements ActionListener,TreeSelectionLis
 		
 		
 
-		this.setTitle(selected_user.id().toUpperCase()); //Title of Main UI
+		this.setTitle(selected_user.id().toUpperCase() + " Creation Time: " + selected_user.getCreation_Time()); //Title of Main UI
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLayout(null);
 		this.setResizable(false);
@@ -273,7 +275,7 @@ public class UserPanel extends JFrame implements ActionListener,TreeSelectionLis
 			
 		}
 
-		
+		clearTweetField();
 	}
 	
 	
