@@ -366,8 +366,8 @@ public class AdminControlPanel extends JFrame implements ActionListener,TreeSele
 				return;
             }
             else if (selected.getUserObject() instanceof User){
-                //User user_for_user_panel = (User) selected.getUserObject();
-               // new UserPanel(user_for_user_panel, root_group);
+                User user_for_user_panel = (User) selected.getUserObject();
+                new UserPanel(user_for_user_panel, root_group);
             }
             else {
             	
