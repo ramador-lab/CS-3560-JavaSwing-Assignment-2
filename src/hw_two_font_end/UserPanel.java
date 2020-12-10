@@ -64,15 +64,7 @@ public class UserPanel extends JFrame implements ActionListener,TreeSelectionLis
 		following_list.setFont(new Font("Verdana", Font.PLAIN, 14));
 		following_list.setBounds(70, 85, 200, 50);
 		
-		//USER FOLLOWING LIST
-		DefaultListModel listModel = new DefaultListModel();
-		for (int i = 0; i < selected_user.getFollowing().size(); i++)
-		{
-		    listModel.addElement(selected_user.getFollowing().get(i));
-		}
-	
 		list = new JList(); 
-		list.setModel(listModel);
 		list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 		list.setLayoutOrientation(JList.VERTICAL_WRAP);
 		list .setBounds(70, 140, 850, 150);
@@ -244,6 +236,14 @@ public class UserPanel extends JFrame implements ActionListener,TreeSelectionLis
 
 	            	FollowUser.attach(selected_user);
 	                selected_user.setFollowing(FollowUser);
+	                
+	        		DefaultListModel listModel = new DefaultListModel();
+	        		for (int i = 0; i < selected_user.getFollowing().size(); i++)
+	        		{
+	        		    listModel.addElement(selected_user.getFollowing().get(i));
+	        		}
+	        		list.setModel(listModel);
+	        	
 	            }
 	         
 	            clearUserField();
@@ -267,9 +267,9 @@ public class UserPanel extends JFrame implements ActionListener,TreeSelectionLis
 			for (int i = 0; i < selected_user.getNews_Feed().size(); i++)
 			{
 			    listModelTwo.addElement(selected_user.getNews_Feed().get(i));
-			    news_feed.setModel(listModelTwo);
 			    
 			}
+			news_feed.setModel(listModelTwo);
 			
 		}
 
