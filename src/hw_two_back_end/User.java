@@ -95,6 +95,7 @@ public class User extends Subject implements SysEntry, Observer{
 			this.News_Feed.add(((User) subject).id() + ": "+ "\n" + message);
 			this.time_frame = System.currentTimeMillis();
 			this.time_updated = new Time(time_frame);
+			this.News_Feed.set(1, "last update: " + time_updated);
 			
 			
 		}
