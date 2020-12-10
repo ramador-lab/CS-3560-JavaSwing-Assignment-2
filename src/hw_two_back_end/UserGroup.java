@@ -19,6 +19,22 @@ public class UserGroup implements SysEntry {
 	}
 	
 	
+    public User look_for_user(String id){
+        for (SysEntry member : Member_Groups) {
+            if (member instanceof User) {
+                if (member.id().equals(id)){
+                    return (User) member;
+                }
+            }
+            else if (member instanceof UserGroup) {
+                if (((UserGroup) member).findID(id)) {
+                    return ((UserGroup) member).look_for_user(id);
+                }
+            }
+        }
+        return null;
+    }
+	
 	
 	@Override
 	public String id() {
@@ -87,8 +103,6 @@ public class UserGroup implements SysEntry {
 		
 		return false;
 	}
-
-	
 
 	
 }

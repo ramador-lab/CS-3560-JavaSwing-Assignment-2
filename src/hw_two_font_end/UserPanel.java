@@ -1,6 +1,7 @@
 package hw_two_font_end;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.LayoutManager;
@@ -8,14 +9,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTree;
+import javax.swing.ListModel;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.Border;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -30,80 +36,116 @@ public class UserPanel extends JFrame implements ActionListener,TreeSelectionLis
 	
 		private JButton follow_user;
 		private JButton post_tweet;
-
 		
-		private UserGroup root_group;
-		
-		private ImageIcon tree_icon;
-		private ImageIcon leaf_icon;
-		
+		private JTextArea tweet_message;
 		private JTextArea user_id;
-		private JTextArea group_id;
-		private JTree tree;
-		private TreeSelectionListener event;
-	
-	
-		UserPanel (User selected_user, UserGroup group){			
 		
+		JLabel user_id_label;
+		
+		
+		private JList list;
+		private JList news_feed;
+		
+		private UserGroup root_group ;
+		private User selected_user;
+	
+	
+		UserPanel (User selected, UserGroup group){			
+		
+		root_group = group;
+		selected_user = selected;
 		
 		Border backline = BorderFactory.createLineBorder(Color.black);
-		LayoutManager layout = new FlowLayout();	
-			
-			
-			
-		JLabel user_id_label = new JLabel(" USER ID: " + selected_user.id());
-		user_id_label.setFont(new Font("Verdana", Font.PLAIN, 14));
-		user_id_label.setBorder(backline);
-		user_id_label.setBounds(70, 20, 200, 50);
+		LayoutManager layout = new FlowLayout();
+		
+		
+		//FOLLOWING LIST LABEL
+		JLabel following_list = new JLabel(" FOLLOWING LIST: ");
+		following_list.setFont(new Font("Verdana", Font.PLAIN, 14));
+		following_list.setBounds(70, 85, 200, 50);
+		
+		//USER FOLLOWING LIST
+		DefaultListModel listModel = new DefaultListModel();
+		for (int i = 0; i < selected_user.getFollowing().size(); i++)
+		{
+		    listModel.addElement(selected_user.getFollowing().get(i));
+		}
 	
+		list = new JList(); 
+		list.setModel(listModel);
+		list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+		list.setLayoutOrientation(JList.VERTICAL_WRAP);
+		list .setBounds(70, 140, 850, 150);
+		list.setBorder(backline);
+		list.setVisibleRowCount(-1);
+		list.setVisible(true);
+	
+		JScrollPane listScroller = new JScrollPane(list);
+		listScroller.setPreferredSize(new Dimension(700, 90));
+        listScroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);  
+        listScroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);  
+			
+			
+		//USER ID
+		user_id_label = new JLabel(" USER ID: ");
+		user_id_label.setFont(new Font("Verdana", Font.PLAIN, 14));
+		user_id_label.setBounds(70, 10, 100, 20);
 		
 		
 		user_id = new JTextArea();
-		user_id.setBounds(25, 40, 200, 50);
+		user_id.setBounds(70, 40, 200, 50);
+		user_id.setBorder(backline);
+		
+		
+		
+		//TWEET MESSAGE TEXT AREA
+		JLabel tweet = new JLabel(" TWEET MESSAGE: ");
+		tweet.setFont(new Font("Verdana", Font.PLAIN, 14));
+		tweet.setBounds(70, 20, 200, 30);
+		
+		tweet_message = new JTextArea();
+		tweet_message.setBorder(backline);
+		tweet_message.setBounds(70, 50, 200, 50);
 				
-		JLabel group_id_label = new JLabel ("GROUP ID");
-		group_id_label.setBounds(25, 100, 150, 20);
-		
-		
-		
-		group_id = new JTextArea();
-		group_id.setBounds(25, 120, 200, 50);
-			
-		
-		root_group = new UserGroup ("ROOT");
-		DefaultMutableTreeNode root = new DefaultMutableTreeNode(root_group);
-	
-		tree = new JTree(root);
-		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-		tree.addTreeSelectionListener(event);
-		JScrollPane treeView = new JScrollPane(tree);
-		
-		tree_icon = createImageIcon("Tree-icon.png");
-		
-	    if (tree_icon != null) {
-	        DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer();
-	        renderer.setLeafIcon(tree_icon);
-	        tree.setCellRenderer(renderer);
-	    } else {
-	        System.err.println("Leaf icon missing; using default.");
-	    }
-		
 
+		//FOLLOW BUTTON
 		follow_user = new JButton ();
-		follow_user.setBounds(720, 20, 200, 50);
+		follow_user.setBounds(720, 40, 200, 50);
 		follow_user.addActionListener(this);
 		follow_user.setText("FOLLOW");
 		follow_user.setHorizontalTextPosition(JButton.CENTER);
 		follow_user.setFocusable(false);
 
 		post_tweet = new JButton();
-		post_tweet.setBounds (375, 100, 200, 50);
+		post_tweet.setBounds (720, 50, 200, 50);
 		post_tweet.addActionListener(this);
 		post_tweet.setText("POST");
 		post_tweet.setHorizontalTextPosition(JButton.CENTER);
 		post_tweet.setFocusable(false);
 			
+		//NEWS FEED
+		JLabel news_feed_label = new JLabel(" NEWS FEED: ");
+		news_feed_label.setFont(new Font("Verdana", Font.PLAIN, 14));
+		news_feed_label.setBounds(70, 120, 200, 30);
 		
+		//NEWS FEED LIST
+
+	
+		news_feed = new JList(); 
+		news_feed.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+		news_feed.setLayoutOrientation(JList.VERTICAL_WRAP);
+		news_feed .setBounds(70, 150, 850, 145);
+		news_feed.setBorder(backline);
+		news_feed.setVisibleRowCount(-1);
+		news_feed.setVisible(true);
+	
+		JScrollPane listScrollerTwo = new JScrollPane(news_feed);
+		listScrollerTwo.setPreferredSize(new Dimension(700, 90));
+        listScrollerTwo.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);  
+        listScrollerTwo.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);  
+			
+		
+		//PANELS
 		JPanel top_panel = new JPanel ();
 		top_panel.setBounds(10, 10, 990, 300);
 		top_panel.setLayout(null);
@@ -118,7 +160,7 @@ public class UserPanel extends JFrame implements ActionListener,TreeSelectionLis
 		
 		
 
-		this.setTitle("USER PANEL"); //Title of Main UI
+		this.setTitle(selected_user.id().toUpperCase()); //Title of Main UI
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLayout(null);
 		this.setResizable(false);
@@ -136,38 +178,32 @@ public class UserPanel extends JFrame implements ActionListener,TreeSelectionLis
 		//TOP PANEL
 		top_panel.add(follow_user);
 		top_panel.add(user_id_label);
+		top_panel.add(user_id);
+		top_panel.add(following_list);
+		top_panel.add(list);
 		
 		
 		//BOTTOM PANEL
 		bottom_panel.add(post_tweet);
+		bottom_panel.add(tweet_message);
+		bottom_panel.add(tweet);
+		bottom_panel.add(news_feed);
+		bottom_panel.add(news_feed_label);
 	
-		
-		
-		
-		
-		ImageIcon image = new ImageIcon("calpolynighttwo.jpg"); //Image Icon
-		this.setIconImage(image.getImage());
 		
 	}
 	
 	
+	
+	
+	private void clearTweetField() {
+	tweet_message.setText(null);
+	}
 	
 	
 	private void clearUserField() {
-	user_id.setText(null);
-	
-	}
-	
-	
-	
-	protected static ImageIcon createImageIcon(String path) {
-	java.net.URL imgURL = AdminControlPanel.class.getResource(path);
-	if (imgURL != null) {
-	    return new ImageIcon(imgURL);
-	} else {
-	    System.err.println("Couldn't find file: " + path);
-	    return null;
-	}
+		user_id.setText(null);
+		
 	}
 	
 	
@@ -178,14 +214,67 @@ public class UserPanel extends JFrame implements ActionListener,TreeSelectionLis
 		// TODO Auto-generated method stub
 		
 	}
-	
-	
-	
-	
+
+
+
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+		
+		if(e.getSource() == follow_user) {
+			
+			 String follow = user_id.getText();
+			 User FollowUser = root_group.look_for_user(follow);
+			 
+	            if (FollowUser == null || user_id.getText().isBlank() || user_id.getText().isEmpty()){
+	            	System.out.println("User not found");
+					JOptionPane.showMessageDialog(null,"User not found or there is not an id entered","error", JOptionPane.ERROR_MESSAGE);
+	          
+	            }
+	            else if (FollowUser == selected_user) {
+	                
+	            	System.out.println("DO NOT FOLLOW YOURSELF");
+					JOptionPane.showMessageDialog(null,"DO NOT FOLLOW YOURSELF","error", JOptionPane.ERROR_MESSAGE);
+	            }
+	            else if (selected_user.getFollowing().contains(FollowUser)){
+	            	System.out.println("DO NOT FOLLOW YOURSELF");
+					JOptionPane.showMessageDialog(null,"DO NOT FOLLOW YOURSELF","error", JOptionPane.ERROR_MESSAGE);
+	            }
+	            else {
+
+	            	FollowUser.attach(selected_user);
+	                selected_user.setFollowing(FollowUser);
+	            }
+	         
+	            clearUserField();
+		}
+		
+		if(e.getSource() == post_tweet) {
+			
+			if(tweet_message.getText().isBlank() || tweet_message.getText().isEmpty()) {
+            	System.out.println("TWEET MESSAGE BOX EMPTY");
+				JOptionPane.showMessageDialog(null,"MESSAGE BOX EMPTY","error", JOptionPane.ERROR_MESSAGE);
+			}
+			
+			String message = tweet_message.getText();
+			selected_user.Post(message);
+			
+        	System.out.println("MESSAGE POSTED");
+			JOptionPane.showMessageDialog(null,"TWEET MESSAGE POSTED","Post", JOptionPane.INFORMATION_MESSAGE);
+			
+			
+			DefaultListModel listModelTwo = new DefaultListModel();
+			for (int i = 0; i < selected_user.getNews_Feed().size(); i++)
+			{
+			    listModelTwo.addElement(selected_user.getNews_Feed().get(i));
+			    news_feed.setModel(listModelTwo);
+			    
+			}
+			
+		}
+
 		
 	}
-
+	
+	
 }

@@ -23,6 +23,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 import javax.swing.ImageIcon;
@@ -40,11 +41,12 @@ public class AdminControlPanel extends JFrame implements ActionListener,TreeSele
 			private JButton show_group_total;
 			private JButton show_positive_percentage;
 		
-
-			
 			private JPanel treePanel;
 			
+			private DefaultTreeModel model;
+			
 			private UserGroup root_group;
+			private DefaultMutableTreeNode root;
 			
 			private ImageIcon tree_icon;
 			private ImageIcon leaf_icon;
@@ -80,12 +82,14 @@ public class AdminControlPanel extends JFrame implements ActionListener,TreeSele
 				
 			
 			root_group = new UserGroup ("ROOT");
-			DefaultMutableTreeNode root = new DefaultMutableTreeNode(root_group);
+			root = new DefaultMutableTreeNode(root_group);
 	
 			tree = new JTree(root);
 			tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 			tree.addTreeSelectionListener(event);
 			JScrollPane treeView = new JScrollPane(tree);
+	        treeView.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);  
+	        treeView.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);  
 			
 			tree_icon = createImageIcon("Tree-icon.png");
 			
@@ -97,7 +101,7 @@ public class AdminControlPanel extends JFrame implements ActionListener,TreeSele
 	            System.err.println("Leaf icon missing; using default.");
 	        }
 			
-
+	       model = (DefaultTreeModel)tree.getModel();
 			
 			//Add User Button
 			add_user = new JButton ();
@@ -175,6 +179,7 @@ public class AdminControlPanel extends JFrame implements ActionListener,TreeSele
 			treePanel.setBorder(backline);
 			treePanel.add(treeView);
 			treePanel.add(tree);
+			treePanel.add(treeView);
 
 			
 			JPanel top_panel = new JPanel ();
@@ -239,6 +244,11 @@ public class AdminControlPanel extends JFrame implements ActionListener,TreeSele
 		
 	}
 	
+	private void clearGroupField() {
+		group_id.setText(null);
+		
+	}
+	
 	
 	
     protected static ImageIcon createImageIcon(String path) {
@@ -265,9 +275,9 @@ public class AdminControlPanel extends JFrame implements ActionListener,TreeSele
 			//SysEntry nodeInfo = selected.getUserObject(); 
 		
 			
-			if (selected == null) {
+			if (selected == null || user_id.getText().isBlank() || user_id.getText().isEmpty()) {
 				System.out.println("Add selection to a group");
-				JOptionPane.showMessageDialog(null,"YOU HAVE NOT CHOSEN A GROUP TO ADD NEW USER TO","Error",JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null,"YOU HAVE NOT CHOSEN A GROUP TO ADD NEW USER TO OR ID IS EMPTY","Error",JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 
@@ -288,7 +298,8 @@ public class AdminControlPanel extends JFrame implements ActionListener,TreeSele
 					User sample = new User(id_input);
 					DefaultMutableTreeNode temp = new DefaultMutableTreeNode(sample);
 					((UserGroup) selected.getUserObject()).addMember(sample);
-					selected.add(temp);
+					selected.add(new DefaultMutableTreeNode(sample));
+					model.reload(selected);
 				}
 			}
 			
@@ -303,10 +314,10 @@ public class AdminControlPanel extends JFrame implements ActionListener,TreeSele
 			selected=(DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
 		
 			
-			if (selected == null) {
+			if (selected == null ) {
 				System.out.println("Add selection to a group");
 				
-				JOptionPane.showMessageDialog(null,"YOU HAVE NOT CHOSEN A GROUP TO ADD NEW USER TO","Error",JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null,"YOU HAVE NOT CHOSEN A GROUP TO ADD NEW USER TO OR IS EMPTY","Error",JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 
@@ -327,18 +338,13 @@ public class AdminControlPanel extends JFrame implements ActionListener,TreeSele
 					UserGroup sample = new UserGroup(id_input);
 					DefaultMutableTreeNode temp = new DefaultMutableTreeNode(sample);
 					((UserGroup) selected.getUserObject()).addMember(sample);
-					selected.add(temp);
-					
-					
+					selected.add(new DefaultMutableTreeNode(sample));
+					model.reload(selected);
 
 				}
 			}
 			
-			
-			
-
-			
-			clearUserField();
+			clearGroupField();
 			
 		}
 		
@@ -360,8 +366,8 @@ public class AdminControlPanel extends JFrame implements ActionListener,TreeSele
 				return;
             }
             else if (selected.getUserObject() instanceof User){
-                User user_for_user_panel = (User) selected.getUserObject();
-                new UserPanel(user_for_user_panel, root_group);
+                //User user_for_user_panel = (User) selected.getUserObject();
+               // new UserPanel(user_for_user_panel, root_group);
             }
             else {
             	

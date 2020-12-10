@@ -3,6 +3,9 @@ package hw_two_back_end;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.swing.ListModel;
+
 import java.sql.Time;
 import java.lang.Exception;
 
@@ -43,7 +46,7 @@ public class User extends Subject implements SysEntry, Observer{
 	
 	
 	//All the UserIds the User Follows
-	public List <User> getFollowing() {
+	public List getFollowing() {
 		return this.Following;
 	}
 	

@@ -20,12 +20,7 @@ public class Driver {
 	
 	
 	public static void main (String [] args) {
-			User user = new User("sample");
-			UserGroup group = new UserGroup("sample");
-			
-
 		 new AdminControlPanel ();
-		 new UserPanel( user, group);
 		
 		
 	}
